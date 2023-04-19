@@ -131,6 +131,10 @@ packer.startup({
     -- LSP
     use({
       "neovim/nvim-lspconfig",
+      requires = {
+        'hrsh7th/nvim-cmp',
+      },
+
       config = function()
         -- Mappings.
         -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -168,9 +172,13 @@ packer.startup({
 
         -- vim.lsp.set_log_level 'debug'
 
-        require('lspconfig').clangd.setup ({
+        -- Set up lspconfig.
+        local capabilities = require('cmp_nvim_lsp').default_capabilities()
+        -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+        require('lspconfig')['clangd'].setup({
+          cmd = { 'clangd12', "-j 32" },
           on_attach = on_attach,
-          cmd = { 'clangd-12' },
+          capabilities = capabilities
         })
       end,
     })
@@ -242,8 +250,6 @@ packer.startup({
     use ({
       'hrsh7th/nvim-cmp',
       requires = {
-        'neovim/nvim-lspconfig',
-
         'hrsh7th/cmp-cmdline',
         'hrsh7th/cmp-path',
         'hrsh7th/cmp-buffer',
@@ -311,13 +317,6 @@ packer.startup({
             { name = 'cmdline' }
           })
         })
-
-        -- Set up lspconfig.
-        local capabilities = require('cmp_nvim_lsp').default_capabilities()
-        -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-        require('lspconfig')['clangd'].setup {
-          capabilities = capabilities
-        }
       end,
     })
 
