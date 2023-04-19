@@ -238,17 +238,6 @@ packer.startup({
       end,
     })
 
-    -- fuzzy
-    use ({
-      'junegunn/fzf.vim',
-      requires = { 'junegunn/fzf', run = ':call fzf#install()' },
-      config = function()
-        vim.g.fzf_layout = { down = '40%' }
-        vim.api.nvim_set_keymap('n', '<Leader>ff', '<cmd>Files<cr>', { noremap = true, silent = true })
-        vim.api.nvim_set_keymap('n', '<Leader>fb', '<cmd>Buffers<cr>', { noremap = true, silent = true })
-      end
-    })
-
     -- A completion engine plugin for neovim written in Lua.
     use ({
       'hrsh7th/nvim-cmp',
@@ -281,9 +270,9 @@ packer.startup({
           mapping = cmp.mapping.preset.insert({
             ['<C-b>'] = cmp.mapping.scroll_docs(-4),
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
-            ['<C-Space>'] = cmp.mapping.complete(),
+            ['<S-Space>'] = cmp.mapping.complete(),
             ['<C-e>'] = cmp.mapping.abort(),
-            ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+            ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
           }),
           sources = cmp.config.sources({
             { name = 'nvim_lsp' },
@@ -332,14 +321,19 @@ packer.startup({
       end,
     })
 
-    -- lsp-fuzzy
-    use ({
-      'ojroques/nvim-lspfuzzy',
-      requires = {
-        {'junegunn/fzf.vim'},  -- to enable preview (optional)
-      },
+    -- telescope
+    use({
+      'nvim-telescope/telescope.nvim', tag = '0.1.1',
+      -- or                           , branch = '0.1.x',
+      requires = { 'nvim-lua/plenary.nvim', 'gbrlsnchs/telescope-lsp-handlers.nvim' },
+
       config = function()
-        require('lspfuzzy').setup {}
+        local builtin = require('telescope.builtin')
+        vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+        vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+        vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+        vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
+        require('telescope').load_extension('lsp_handlers')
       end
     })
 
