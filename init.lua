@@ -323,8 +323,10 @@ packer.startup({
     -- telescope
     use({
       'nvim-telescope/telescope.nvim', tag = '0.1.1',
-      -- or                           , branch = '0.1.x',
-      requires = { 'nvim-lua/plenary.nvim', 'gbrlsnchs/telescope-lsp-handlers.nvim' },
+      requires = {
+        'nvim-lua/plenary.nvim',
+        'gbrlsnchs/telescope-lsp-handlers.nvim'
+      },
 
       config = function()
         local builtin = require('telescope.builtin')
@@ -332,7 +334,31 @@ packer.startup({
         vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
         vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
         vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-        require('telescope').load_extension('lsp_handlers')
+        vim.keymap.set('n', '<leader>fp', builtin.builtin, {})
+
+        local telescope = require("telescope")
+        local telescopeConfig = require("telescope.config")
+
+        -- Clone the default Telescope configuration
+        local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
+
+        -- I want to search in hidden/dot files.
+        table.insert(vimgrep_arguments, "--hidden")
+        table.insert(vimgrep_arguments, "--no-ignore")
+
+        telescope.setup({
+          defaults = {
+            -- `hidden = true` is not supported in text grep commands.
+            vimgrep_arguments = vimgrep_arguments,
+          },
+          pickers = {
+            find_files = {
+              find_command = { "rg", "--files", "--hidden", "--no-ignore" },
+            },
+          },
+        })
+
+        telescope.load_extension('lsp_handlers')
       end
     })
 
