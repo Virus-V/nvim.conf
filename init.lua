@@ -347,9 +347,6 @@ packer.startup({
         table.insert(vimgrep_arguments, "--no-ignore")
 
         table.insert(vimgrep_arguments, "--glob")
-        table.insert(vimgrep_arguments, "*.{c,h,S,ld,map}")
-
-        table.insert(vimgrep_arguments, "--glob")
         table.insert(vimgrep_arguments, "!.cache/*")
         table.insert(vimgrep_arguments, "--glob")
         table.insert(vimgrep_arguments, "!**/.git/*")
@@ -362,7 +359,6 @@ packer.startup({
           pickers = {
             find_files = {
               find_command = { "rg", "--files", "--hidden", "--no-ignore",
-                "--glob", "*.{c,h,S,ld,map}",
                 "--glob", "!.cache/*",
                 "--glob", "!**/.git/*",
               },
