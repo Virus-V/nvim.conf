@@ -41,7 +41,6 @@ o.syntax = "on"
 o.encoding = "UTF-8"
 o.ruler = true
 o.title = true
-o.ttimeoutlen = 0
 o.inccommand = "split"
 -- o.splitbelow = "splitright"
 o.autoread = true
@@ -179,6 +178,29 @@ packer.startup({
           cmd = { 'clangd12', "-j 32" },
           on_attach = on_attach,
           capabilities = capabilities
+        })
+      end,
+    })
+
+    use({
+      "ray-x/go.nvim",
+      requires = {
+        "ray-x/guihua.lua",
+        "neovim/nvim-lspconfig",
+        "nvim-treesitter/nvim-treesitter",
+      },
+      run = function()
+        require("go.install").update_all_sync()
+      end,
+      config = function ()
+        require("go").setup()
+        local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
+        vim.api.nvim_create_autocmd("BufWritePre", {
+          pattern = "*.go",
+          callback = function()
+           require('go.format').goimport()
+          end,
+          group = format_sync_grp,
         })
       end,
     })
