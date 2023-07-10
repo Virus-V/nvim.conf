@@ -179,6 +179,12 @@ packer.startup({
           on_attach = on_attach,
           capabilities = capabilities
         })
+
+        require('lspconfig')['gopls'].setup({
+          on_attach = on_attach,
+          capabilities = capabilities
+        })
+
       end,
     })
 
@@ -186,14 +192,9 @@ packer.startup({
       "ray-x/go.nvim",
       requires = {
         "ray-x/guihua.lua",
-        "neovim/nvim-lspconfig",
-        "nvim-treesitter/nvim-treesitter",
       },
       run = function()
         require("go.install").update_all_sync()
-      end,
-      config = function ()
-        require("go").setup()
         local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
         vim.api.nvim_create_autocmd("BufWritePre", {
           pattern = "*.go",
@@ -202,6 +203,9 @@ packer.startup({
           end,
           group = format_sync_grp,
         })
+      end,
+      config = function ()
+        require("go").setup()
       end,
     })
 
