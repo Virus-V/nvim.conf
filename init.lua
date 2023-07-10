@@ -373,6 +373,9 @@ packer.startup({
         table.insert(vimgrep_arguments, "--glob")
         table.insert(vimgrep_arguments, "!**/.git/*")
 
+        table.insert(vimgrep_arguments, "--glob")
+        table.insert(vimgrep_arguments, "!*.{o,elf}")
+
         telescope.setup({
           defaults = {
             -- `hidden = true` is not supported in text grep commands.
@@ -383,6 +386,7 @@ packer.startup({
               find_command = { "rg", "--files", "--hidden", "--no-ignore",
                 "--glob", "!.cache/*",
                 "--glob", "!**/.git/*",
+                "--glob", "!*.{o,elf}",
               },
             },
           },
