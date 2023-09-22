@@ -11,7 +11,12 @@ local o = vim.o
 o.tabstop = 2
 o.softtabstop = 2
 o.shiftwidth = 2
+-- set tab to space
+-- o.expandtab = false
+-- set space to tab
+-- change at runtime:  :lua vim.o.expandtab = false
 o.expandtab = true
+
 o.autoindent = true
 --o.copyindent = true
 o.clipboard = "unnamedplus"
@@ -102,7 +107,7 @@ packer.startup({
       config = function()
         require("nvim-treesitter.configs").setup {
           -- One of "all", "maintained" (parsers with maintainers), or a list of languages
-          ensure_installed = { "c", "cpp", "make", "vim" },
+          ensure_installed = { "c", "cpp", "make", "vim", "go" },
 
           -- Install languages synchronously (only applied to `ensure_installed`)
           sync_install = false,
@@ -175,7 +180,7 @@ packer.startup({
         local capabilities = require('cmp_nvim_lsp').default_capabilities()
         -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
         require('lspconfig')['clangd'].setup({
-          cmd = { 'clangd12', "-j 32" },
+          cmd = { 'clangd15', '--query-driver=**' },
           on_attach = on_attach,
           capabilities = capabilities
         })
