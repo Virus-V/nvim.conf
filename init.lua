@@ -131,6 +131,12 @@ plugins = {
 			vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 			vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
+			local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
+			for type, icon in pairs(signs) do
+				local hl = "DiagnosticSign" .. type
+				vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+			end
+
 			-- Use an on_attach function to only map the following keys
 			-- after the language server attaches to the current buffer
 			local on_attach = function(client, bufnr)
