@@ -71,6 +71,12 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+-- Toggle tab and space
+vim.keymap.set('n', '<leader><tab>', function ()
+  o.expandtab = not o.expandtab
+  require('lualine').refresh()
+end, { noremap=true, silent=true })
+
 plugins = {
   -- scheme
   {
@@ -227,52 +233,23 @@ plugins = {
   -- status line
   {
     'nvim-lualine/lualine.nvim',
-    dependencies = { 'kyazdani42/nvim-web-devicons', lazy = true },
+    --dependencies = { 'kyazdani42/nvim-web-devicons', lazy = true },
     config = function()
+      local function get_expandtab()
+        if (o.expandtab) then
+          return [[space]]
+        else
+          return [[tab]]
+        end
+      end
       require('lualine').setup({
         options = {
           icons_enabled = false,
-          theme = "gruvbox-material",
-          component_separators = { left = "", right = "|" },
-          section_separators = { left = "", right = "" },
+          component_separators = { left = '', right = ''},
+          section_separators = { left = '', right = ''},
         },
         sections = {
-          lualine_a = {'mode'},
-          lualine_b = {'branch', 'diff', 'diagnostics'},
-          lualine_c = {
-            {
-              'filename',
-              file_status = true,
-              newfile_status = false,
-              path = 1,
-              shorting_target = 40,
-              symbols = {
-                modified = '[+]',
-                readonly = '[-]',
-                unnamed = '[No Name]',
-                newfile = '[New]',
-              }
-            }
-          },
-          lualine_x = {'encoding', 'fileformat', 'filetype'},
-          lualine_y = {'progress'},
-          lualine_z = {'location'}
-        },
-        inactive_sections = {
-          lualine_a = {},
-          lualine_b = {},
-          lualine_c = {'filename'},
-          lualine_x = {'location'},
-          lualine_y = {},
-          lualine_z = {}
-        },
-        tabline = {
-          lualine_a = {'buffers'},
-          lualine_b = {},
-          lualine_c = {},
-          lualine_x = {},
-          lualine_y = {},
-          lualine_z = {'tabs'}
+          lualine_x = {'encoding', 'fileformat', 'filetype', get_expandtab},
         }
       })
     end,
