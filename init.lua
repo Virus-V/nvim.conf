@@ -250,6 +250,21 @@ plugins = {
         },
         sections = {
           lualine_x = {'encoding', 'fileformat', 'filetype', get_expandtab},
+          lualine_c = {
+            {
+              'filename',
+              file_status = true,
+              newfile_status = false,
+              path = 1,
+              shorting_target = 40,
+              symbols = {
+               modified = '[+]',
+               readonly = '[-]',
+               unnamed = '[No Name]',
+               newfile = '[New]',
+              }
+            }
+          },
         }
       })
     end,
