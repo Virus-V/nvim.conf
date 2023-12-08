@@ -377,20 +377,28 @@ plugins = {
       table.insert(vimgrep_arguments, "!**/.git/*")
 
       table.insert(vimgrep_arguments, "--glob")
-      table.insert(vimgrep_arguments, "!*.{o,elf}")
+      table.insert(vimgrep_arguments, "!*.{o,elf,i,s,d}^")
 
       telescope.setup({
         defaults = {
           -- `hidden = true` is not supported in text grep commands.
           vimgrep_arguments = vimgrep_arguments,
+          layout_strategy='vertical',
+          layout_config = {
+            -- other layout configuration here
+          },
         },
         pickers = {
           find_files = {
+            --theme = "dropdown",
             find_command = { "rg", "--files", "--hidden", "--no-ignore",
               "--glob", "!.cache/*",
               "--glob", "!**/.git/*",
-              "--glob", "!*.{o,elf}",
+              "--glob", "!*.{o,elf,i,s,d}^",
             },
+          },
+          live_grep = {
+            --theme = "dropdown",
           },
         },
       })
