@@ -367,6 +367,8 @@ plugins = {
       -- Clone the default Telescope configuration
       local vimgrep_arguments = { unpack(telescopeConfig.values.vimgrep_arguments) }
 
+      local ignore_file_suffix = "!*.{o,elf,i,s,d,ninja,cmake}"
+
       -- I want to search in hidden/dot files.
       table.insert(vimgrep_arguments, "--hidden")
       table.insert(vimgrep_arguments, "--no-ignore")
@@ -377,7 +379,7 @@ plugins = {
       table.insert(vimgrep_arguments, "!**/.git/*")
 
       table.insert(vimgrep_arguments, "--glob")
-      table.insert(vimgrep_arguments, "!*.{o,elf,i,s,d}^")
+      table.insert(vimgrep_arguments, ignore_file_suffix)
 
       telescope.setup({
         defaults = {
@@ -394,7 +396,7 @@ plugins = {
             find_command = { "rg", "--files", "--hidden", "--no-ignore",
               "--glob", "!.cache/*",
               "--glob", "!**/.git/*",
-              "--glob", "!*.{o,elf,i,s,d}^",
+              "--glob", ignore_file_suffix,
             },
           },
           live_grep = {
