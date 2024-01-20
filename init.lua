@@ -58,6 +58,16 @@ opt.termguicolors = true
 --Relative line number
 wo.relativenumber = false
 
+-- disable auto new comment line when o
+vim.api.nvim_create_autocmd(
+  "FileType",
+  {pattern = "*", callback = function(ev)
+    -- print(string.format('event fired: %s', vim.inspect(ev)))
+    -- :verb set formatoptions  -- show who last touch the veriable
+    vim.opt.formatoptions:remove({ 'o' })
+  end}
+)
+
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
