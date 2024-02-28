@@ -380,8 +380,8 @@ plugins = {
       vim.keymap.set('n', '<leader>ff', builtin.find_files, {}) -- 查找文件，类似于fzf
       vim.keymap.set('n', '<leader>fg', builtin.live_grep, {}) -- 在当前目录全局查找字符串
       vim.keymap.set('n', '<leader>fb', builtin.buffers, {}) -- 查找nvim打开的buffer
-      vim.keymap.set('n', '<leader>fh', builtin.help_tags, {}) -- 查找有哪些tag，你可以尝试下
-      vim.keymap.set('n', '<leader>fp', builtin.builtin, {}) -- 尝试下就知道了，用的不多
+      vim.keymap.set('n', '<leader>fh', builtin.help_tags, {}) -- 查找有哪些help，全局检索帮助文档
+      vim.keymap.set('n', '<leader>fp', builtin.builtin, {}) -- 列出内置的检索器
 
       local telescope = require("telescope")
       local telescopeConfig = require("telescope.config")
