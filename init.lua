@@ -59,6 +59,7 @@ opt.termguicolors = true
 wo.relativenumber = false
 
 -- disable auto new comment line when o
+-- 在Normal模式下，输入o新起一行，不要自动根据上一行添加注释符
 vim.api.nvim_create_autocmd(
   "FileType",
   {pattern = "*", callback = function(ev)
@@ -68,6 +69,7 @@ vim.api.nvim_create_autocmd(
   end}
 )
 
+-- 加载lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -82,6 +84,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- Toggle tab and space
+-- 切换Tab键输出\t还是空格，在空白风格不统一且需要修改代码的时候很有用
+-- <leader>是\字符（backspace下面），<tab>就是Tab键
+-- lualine 插件右下角里会显示当前是tab还是space
 vim.keymap.set('n', '<leader><tab>', function ()
   o.expandtab = not o.expandtab
   require('lualine').refresh()
@@ -89,6 +94,7 @@ end, { noremap=true, silent=true })
 
 plugins = {
   -- scheme
+  -- 主题，这个颜色柔和不伤眼，长时间看不累
   {
     "sainnhe/gruvbox-material",
     config = function()
@@ -97,6 +103,7 @@ plugins = {
   },
 
   -- Treesitter
+  -- 语法高亮插件
   {
     "nvim-treesitter/nvim-treesitter",
     build = function()
@@ -130,7 +137,8 @@ plugins = {
     end,
   },
 
-  -- LSP
+  -- LSP(Language Server Protocol)
+  -- 替代Cscope的新一代代码跳转工具，有一系列快捷键，看下面的配置
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -164,21 +172,21 @@ plugins = {
         -- Mappings.
         -- See `:help vim.lsp.*` for documentation on any of the below functions
         local bufopts = { noremap=true, silent=true, buffer=bufnr }
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-        vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts) -- 跳转到声明，一般在头文件中
+        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts) -- 跳转到定义
+        vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts) -- 显示当前符号的信息（如函数签名，可以看到什么参数，返回值及其各自的类型等）
+        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts) -- 跳到实现（C中不常用，go语言或者C++中一般会对interface，跳到其实现的地方）
+        vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts) -- Ctrl+k 不常用（不知道是啥）
+        vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts) -- 下面三个不常用，好像和clangd的检索目录有关系
         vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
         vim.keymap.set('n', '<space>wl', function()
           print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end, bufopts)
-        vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-        vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-        vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-        vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-        vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+        vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts) --
+        vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts) -- 重命名一个符号，很强大的功能，可以把一个函数或者变量全部改名字，用到的地方自动修改
+        vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts) --
+        vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts) -- 查看哪里使用了当前的符号
+        vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts) -- 对代码进行格式化
       end
 
       -- vim.lsp.set_log_level 'debug'
@@ -188,9 +196,7 @@ plugins = {
       -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
       require('lspconfig')['clangd'].setup({
         --cmd = { 'nc', '127.0.0.1', '1234' },
-        --cmd = { 'clangd15', '--query-driver=/usr/opt/riscv-toolchain/xuantie/bin/riscv64-unknown*' },
-        cmd = { 'clangd15', '--query-driver=**' },
-        -- cmd = { 'clangd15', '--query-driver=/home/virusv/work_nvme0/iotsdk_lts/toolchain/riscv/Thead_riscv/FreeBSD_amd64/bin/riscv64-unknown-elf*'},
+        cmd = { 'clangd', '--query-driver=**' }, -- clangd 代码解析器的路径
         on_attach = on_attach,
         capabilities = capabilities
       })
@@ -204,6 +210,7 @@ plugins = {
   },
 
   -- golang
+  -- go语言开发环境
   {
     "ray-x/go.nvim",
     lazy = true,
@@ -232,20 +239,22 @@ plugins = {
   },
 
   -- myword
+  -- 单词高亮，可以对多个单词用不同颜色高亮
   {
     "dwrdx/mywords.nvim",
     keys = {
-      { "<leader>m", "<cmd>lua require'mywords'.hl_toggle()<cr>", desc = "toggle highlight a word" },
-      { "<leader>c", "<cmd>lua require'mywords'.uhl_all()<cr>", desc = "Highlight clear all" },
+      { "<leader>m", "<cmd>lua require'mywords'.hl_toggle()<cr>", desc = "toggle highlight a word" }, -- <leader>m，对当前光标的单词进行高亮，再按一次取消高亮
+      { "<leader>c", "<cmd>lua require'mywords'.uhl_all()<cr>", desc = "Highlight clear all" }, -- 取消全部高亮
     },
   },
 
   -- status line
+  -- lualine状态栏，在nvim的最下面一行，显示当前状态的，可以定制
   {
     'nvim-lualine/lualine.nvim',
     --dependencies = { 'kyazdani42/nvim-web-devicons', lazy = true },
     config = function()
-      local function get_expandtab()
+      local function get_expandtab() -- 比如可以显示当前是tab还是空格
         if (o.expandtab) then
           return [[space]]
         else
@@ -281,6 +290,7 @@ plugins = {
   },
 
   -- A completion engine plugin for neovim written in Lua.
+  -- 基于LSP的自动补全工具
   {
     'hrsh7th/nvim-cmp',
     dependencies = {
@@ -308,6 +318,7 @@ plugins = {
           -- completion = cmp.config.window.bordered(),
           -- documentation = cmp.config.window.bordered(),
         },
+        -- 快捷键在这里，可以试试看
         mapping = cmp.mapping.preset.insert({
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -356,6 +367,7 @@ plugins = {
   },
 
   -- telescope
+  -- 文件搜索/内容搜索工具，非常有用
   {
     'nvim-telescope/telescope.nvim', tag = '0.1.4',
     dependencies = {
@@ -365,11 +377,11 @@ plugins = {
 
     config = function()
       local builtin = require('telescope.builtin')
-      vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
-      vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
-      vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
-      vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
-      vim.keymap.set('n', '<leader>fp', builtin.builtin, {})
+      vim.keymap.set('n', '<leader>ff', builtin.find_files, {}) -- 查找文件，类似于fzf
+      vim.keymap.set('n', '<leader>fg', builtin.live_grep, {}) -- 在当前目录全局查找字符串
+      vim.keymap.set('n', '<leader>fb', builtin.buffers, {}) -- 查找nvim打开的buffer
+      vim.keymap.set('n', '<leader>fh', builtin.help_tags, {}) -- 查找有哪些tag，你可以尝试下
+      vim.keymap.set('n', '<leader>fp', builtin.builtin, {}) -- 尝试下就知道了，用的不多
 
       local telescope = require("telescope")
       local telescopeConfig = require("telescope.config")
@@ -420,6 +432,7 @@ plugins = {
   },
 
   -- This plugin trims trailing whitespace and lines.
+  -- 在保存的时候，自动去掉文件头尾的空行，以及行尾的空格
   {
     "cappyzawa/trim.nvim",
     config = function()
