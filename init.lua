@@ -332,6 +332,7 @@ plugins = {
           -- { name = 'luasnip' }, -- For luasnip users.
           -- { name = 'ultisnips' }, -- For ultisnips users.
           -- { name = 'snippy' }, -- For snippy users.
+          { name = "codeium" }
         }, {
           { name = 'buffer' },
         })
@@ -439,6 +440,19 @@ plugins = {
       require("trim").setup({
         ft_blocklist = {"markdown"},
       })
+    end
+  },
+
+  -- Native Codeium plugin for Neovim.
+  {
+    "Exafunction/codeium.nvim",
+    dependencies = {
+        "nvim-lua/plenary.nvim",
+        "hrsh7th/nvim-cmp",
+    },
+    config = function()
+        require("codeium").setup({
+        })
     end
   },
 }
