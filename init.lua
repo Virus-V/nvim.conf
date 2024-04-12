@@ -243,8 +243,21 @@ plugins = {
   {
     "dwrdx/mywords.nvim",
     keys = {
-      { "<leader>m", "<cmd>lua require'mywords'.hl_toggle()<cr>", desc = "toggle highlight a word" }, -- <leader>m，对当前光标的单词进行高亮，再按一次取消高亮
-      { "<leader>c", "<cmd>lua require'mywords'.uhl_all()<cr>", desc = "Highlight clear all" }, -- 取消全部高亮
+      {
+        "<leader>m", -- <leader>m，对当前光标的单词进行高亮，再按一次取消高亮
+        function ()
+          require'mywords'.hl_toggle()
+        end,
+        desc = "toggle highlight a word"
+      },
+      {
+        "<leader>c", -- 取消全部高亮
+        function ()
+          require'mywords'.uhl_all()
+          vim.cmd([[nohlsearch]])
+        end,
+        desc = "Highlight clear all"
+      },
     },
   },
 
