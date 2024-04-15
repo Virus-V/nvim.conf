@@ -422,9 +422,6 @@ plugins = {
           -- `hidden = true` is not supported in text grep commands.
           vimgrep_arguments = vimgrep_arguments,
           layout_strategy = 'vertical',
-          path_display = {
-            shorten = 3
-          },
           layout_config = {
             -- other layout configuration here
           },
@@ -446,7 +443,10 @@ plugins = {
           lsp_handlers = {
             location = {
               telescope = {
-                fname_width = 40
+                fname_width = 40,
+                path_display = {
+                  shorten = 3
+                },
               },
               no_results_message = 'No references found',
             },
