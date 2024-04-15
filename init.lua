@@ -422,7 +422,9 @@ plugins = {
           -- `hidden = true` is not supported in text grep commands.
           vimgrep_arguments = vimgrep_arguments,
           layout_strategy = 'vertical',
-          path_display = {"smart"},
+          path_display = {
+            shorten = 3
+          },
           layout_config = {
             -- other layout configuration here
           },
