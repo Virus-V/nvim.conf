@@ -421,7 +421,8 @@ plugins = {
         defaults = {
           -- `hidden = true` is not supported in text grep commands.
           vimgrep_arguments = vimgrep_arguments,
-          layout_strategy='vertical',
+          layout_strategy = 'vertical',
+          path_display = {"smart"},
           layout_config = {
             -- other layout configuration here
           },
@@ -437,6 +438,19 @@ plugins = {
           },
           live_grep = {
             --theme = "dropdown",
+          },
+        },
+        extensions = {
+          lsp_handlers = {
+            location = {
+              telescope = {
+                fname_width = 40
+              },
+              no_results_message = 'No references found',
+            },
+            code_action = {
+              telescope = require('telescope.themes').get_dropdown({}),
+            },
           },
         },
       })
