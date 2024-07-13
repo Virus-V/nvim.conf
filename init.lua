@@ -392,7 +392,10 @@ plugins = {
     config = function()
       local builtin = require('telescope.builtin')
       vim.keymap.set('n', '<leader>ff', builtin.find_files, {}) -- 查找文件，类似于fzf
-      vim.keymap.set('n', '<leader>fg', builtin.live_grep, {}) -- 在当前目录全局查找字符串
+      vim.keymap.set('n', '<leader>fg', function()
+        builtin.live_grep({ default_text = vim.fn.expand('<cword>') })
+      end, {}) -- 在当前目录全局查找当前字符串
+
       vim.keymap.set('n', '<leader>fb', builtin.buffers, {}) -- 查找nvim打开的buffer
       vim.keymap.set('n', '<leader>fh', builtin.help_tags, {}) -- 查找有哪些help，全局检索帮助文档
       vim.keymap.set('n', '<leader>fp', builtin.builtin, {}) -- 列出内置的检索器
