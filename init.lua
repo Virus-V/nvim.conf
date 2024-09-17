@@ -209,8 +209,9 @@ plugins = {
     end,
   },
 
-  -- golang
+  -- golang, disable by default
   -- go语言开发环境
+  --[[
   {
     "ray-x/go.nvim",
     lazy = true,
@@ -235,8 +236,8 @@ plugins = {
     build = function()
       require("go.install").update_all_sync()
     end,
-
   },
+  ]]
 
   -- myword
   -- 单词高亮，可以对多个单词用不同颜色高亮
