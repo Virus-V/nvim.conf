@@ -98,6 +98,11 @@ plugins = {
   {
     "sainnhe/gruvbox-material",
     config = function()
+      vim.g.gruvbox_material_enable_italic = true
+      vim.g.gruvbox_material_statusline_style = 'default'
+      vim.g.gruvbox_material_diagnostic_virtual_text = 'colored'
+      vim.g.gruvbox_material_float_style = 'dim'
+      vim.cmd("set background=light")
       vim.cmd("colorscheme gruvbox-material")
     end
   },
