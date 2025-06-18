@@ -38,7 +38,8 @@ o.swapfile = false
 
 o.wrap = false
 o.mouse = "v"
---o.scrolloff = 12
+o.scrolloff = 5
+o.scroll = 5
 --o.updatetime = 10
 --o.nofsync = true
 --o.undofile = true
@@ -165,7 +166,14 @@ plugins = {
         vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts) -- 重命名一个符号，很强大的功能，可以把一个函数或者变量全部改名字，用到的地方自动修改
         vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts) --
         vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts) -- 查看哪里使用了当前的符号
-        vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts) -- 对代码进行格式化
+        vim.keymap.set('n', '<space>f', function()
+          vim.lsp.buf.format {
+            opts={
+              formatting_options = {}
+            },
+            async = true
+          }
+        end, bufopts) -- 对代码进行格式化
       end
 
       -- vim.lsp.set_log_level 'debug'
