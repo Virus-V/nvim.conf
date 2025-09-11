@@ -152,20 +152,15 @@ plugins = {
         -- Mappings.
         -- See `:help vim.lsp.*` for documentation on any of the below functions
         local bufopts = { noremap=true, silent=true, buffer=bufnr }
-        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts) -- 跳转到声明，一般在头文件中
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts) -- 跳转到定义
         vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts) -- 显示当前符号的信息（如函数签名，可以看到什么参数，返回值及其各自的类型等）
-        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts) -- 跳到实现（C中不常用，go语言或者C++中一般会对interface，跳到其实现的地方）
         vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts) -- Ctrl+k 不常用（不知道是啥）
         vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts) -- 下面三个不常用，好像和clangd的检索目录有关系
         vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
         vim.keymap.set('n', '<space>wl', function()
           print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end, bufopts)
-        vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts) --
         vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts) -- 重命名一个符号，很强大的功能，可以把一个函数或者变量全部改名字，用到的地方自动修改
         vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts) --
-        vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts) -- 查看哪里使用了当前的符号
         vim.keymap.set('n', '<space>f', function()
           vim.lsp.buf.format {
             opts={
@@ -371,10 +366,10 @@ plugins = {
   -- telescope
   -- 文件搜索/内容搜索工具，非常有用
   {
-    'nvim-telescope/telescope.nvim', tag = '0.1.4',
+    'nvim-telescope/telescope.nvim',
+    -- tag = '0.1.4',
     dependencies = {
       'nvim-lua/plenary.nvim',
-      'gbrlsnchs/telescope-lsp-handlers.nvim'
     },
 
     config = function()
@@ -387,6 +382,13 @@ plugins = {
       vim.keymap.set('n', '<leader>fb', builtin.buffers, {}) -- 查找nvim打开的buffer
       vim.keymap.set('n', '<leader>fh', builtin.help_tags, {}) -- 查找有哪些help，全局检索帮助文档
       vim.keymap.set('n', '<leader>fp', builtin.builtin, {}) -- 列出内置的检索器
+
+      local bufopts = { noremap=true, silent=true, buffer=bufnr }
+      vim.keymap.set('n', 'gD', builtin.lsp_type_definitions, bufopts) -- 跳转到声明，一般在头文件中
+      vim.keymap.set('n', 'gd', builtin.lsp_definitions, bufopts) -- 跳转到定义
+      vim.keymap.set('n', 'gr', builtin.lsp_references, bufopts) -- 查看哪里使用了当前的符号
+      vim.keymap.set('n', 'gi', builtin.lsp_implementations, bufopts) -- 跳到实现（C中不常用，go语言或者C++中一般会对interface，跳到其实现的地方）
+      vim.keymap.set('n', '<space>D', vim.lsp.buf.declaration, bufopts) --
 
       local telescope = require("telescope")
       local telescopeConfig = require("telescope.config")
@@ -431,24 +433,9 @@ plugins = {
           },
         },
         extensions = {
-          lsp_handlers = {
-            location = {
-              telescope = {
-                fname_width = 40,
-                path_display = {
-                  shorten = 3
-                },
-              },
-              no_results_message = 'No references found',
-            },
-            code_action = {
-              telescope = require('telescope.themes').get_dropdown({}),
-            },
-          },
         },
       })
 
-      telescope.load_extension('lsp_handlers')
     end
   },
 
