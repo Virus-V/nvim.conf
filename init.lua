@@ -376,7 +376,8 @@ plugins = {
   -- 文件搜索/内容搜索工具，非常有用
   {
     'nvim-telescope/telescope.nvim',
-    tag = '0.1.8',
+    -- tag = '0.1.8',
+    -- commit = 'b4da76b', -- 不再使用nvim弃用的接口
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
