@@ -9,13 +9,15 @@ local wo = vim.wo
 -- global.maplocalleader = " "
 
 -- Editor options
-o.tabstop = 2
-o.softtabstop = 2
-o.shiftwidth = 2
+-- 设置 Tab 宽度为4个空格
+o.tabstop = 4
+o.softtabstop = 4
+o.shiftwidth = 4
 -- set tab to space
 -- o.expandtab = false
 -- set space to tab
 -- change at runtime:  :lua vim.o.expandtab = false
+-- 将 Tab 转换为空格
 o.expandtab = true
 
 o.autoindent = true
@@ -88,10 +90,56 @@ vim.opt.rtp:prepend(lazypath)
 -- 切换Tab键输出\t还是空格，在空白风格不统一且需要修改代码的时候很有用
 -- <leader>是\字符（backspace下面），<tab>就是Tab键
 -- lualine 插件右下角里会显示当前是tab还是space
-vim.keymap.set('n', '<leader><tab>', function ()
-  o.expandtab = not o.expandtab
-  require('lualine').refresh()
-end, { noremap=true, silent=true })
+local tabTimer = nil
+
+-- 主映射函数
+local function handle_tab_combo()
+  if tabTimer then tabTimer:close() end
+
+  -- 显示临时提示
+  vim.api.nvim_echo(
+    {{"Press: ", "Normal"}, {"<tab>", "Keyword"}, {" to toggle, ", "Normal"},
+     {"2/4/8", "Number"}, {" to set width", "Normal"}},
+    false, {}
+  )
+
+  -- 设置超时（1000ms）
+  tabTimer = vim.defer_fn(function()
+    vim.api.nvim_echo({{"", "Normal"}}, false, {})
+    tabTimer = nil
+  end, 2000)
+
+  -- 获取按键（非阻塞，配合超时）
+  vim.schedule(function()
+    local ok, char = pcall(vim.fn.getchar)
+    if not ok or char == 0 then return end
+
+    local key = vim.fn.nr2char(char)
+
+    if key == '\t' then
+      o.expandtab = not o.expandtab
+      vim.notify(string.format("expandtab: %s", o.expandtab and "ON" or "OFF"),
+                 vim.log.levels.INFO)
+    elseif key == '2' or key == '4' or key == '8' then
+      local width = tonumber(key)
+      o.tabstop = width
+      o.shiftwidth = width
+      o.softtabstop = width
+      vim.notify(string.format("Tab width set to %d", width), vim.log.levels.INFO)
+    end
+
+    require('lualine').refresh()
+
+    if tabTimer then
+      tabTimer:close()
+      tabTimer = nil
+    end
+  end)
+end
+
+-- 设置映射
+vim.keymap.set('n', '<leader><tab>', handle_tab_combo,
+  { noremap=true, silent=true, desc = "Tab settings menu" })
 
 plugins = {
   -- scheme
@@ -260,11 +308,7 @@ plugins = {
     --dependencies = { 'kyazdani42/nvim-web-devicons', lazy = true },
     config = function()
       local function get_expandtab() -- 比如可以显示当前是tab还是空格
-        if (o.expandtab) then
-          return [[space]]
-        else
-          return [[tab]]
-        end
+        return string.format("%s/%d", (o.expandtab) and "space" or "tab", o.tabstop)
       end
       require('lualine').setup({
         options = {
