@@ -53,7 +53,7 @@ o.title = true
 o.inccommand = "split"
 -- o.splitbelow = "splitright"
 o.autoread = true
-opt.colorcolumn = "79"
+opt.colorcolumn = "120"
 
 -- set termguicolors to enable highlight groups
 opt.termguicolors = true
