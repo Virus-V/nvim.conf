@@ -233,14 +233,14 @@ plugins = {
       -- Set up lspconfig.
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
       -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-      require('lspconfig')['clangd'].setup({
+      vim.lsp.config('clangd', {
         --cmd = { 'nc', '127.0.0.1', '1234' },
         cmd = { 'clangd', '--query-driver=**' }, -- clangd 代码解析器的路径
         on_attach = on_attach,
         capabilities = capabilities
       })
 
-      require('lspconfig')['gopls'].setup({
+      vim.lsp.config('gopls', {
         on_attach = on_attach,
         capabilities = capabilities
       })
