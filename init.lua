@@ -182,7 +182,7 @@ plugins = {
       'nvim-telescope/telescope.nvim',
     },
     lazy = true,
-    ft = {"c", 'h', 'cpp', 'hpp', 'go'},
+    ft = {"c", 'h', 'cpp', 'hpp', 'go', 'python'},
     config = function()
       -- Mappings.
       -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -239,14 +239,19 @@ plugins = {
         on_attach = on_attach,
         capabilities = capabilities
       })
+      vim.lsp.enable('clangd')
 
       vim.lsp.config('gopls', {
         on_attach = on_attach,
         capabilities = capabilities
       })
-
-      vim.lsp.enable('clangd')
       vim.lsp.enable('gopls')
+
+      vim.lsp.config('pyright', {
+        on_attach = on_attach,
+        capabilities = capabilities
+      })
+      vim.lsp.enable('pyright')
 
     end,
   },
