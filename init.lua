@@ -171,8 +171,9 @@ plugins = {
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
+    lazy = false,
     config = function ()
-      local configs = require("nvim-treesitter.configs")
+      local configs = require("nvim-treesitter")
 
       configs.setup({
           ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir", "heex", "javascript", "html", "markdown" },
