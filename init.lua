@@ -156,6 +156,16 @@ plugins = {
     end
   },
 
+  -- Auto dark mode
+  {
+    "f-person/auto-dark-mode.nvim",
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    }
+  },
+
   -- Treesitter
   -- 语法高亮插件
   {
@@ -228,7 +238,7 @@ plugins = {
         end, bufopts) -- 对代码进行格式化
       end
 
-      -- vim.lsp.set_log_level 'debug'
+      vim.lsp.set_log_level 'warn'
 
       -- Set up lspconfig.
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
