@@ -239,7 +239,7 @@ plugins = {
         end, bufopts) -- 对代码进行格式化
       end
 
-      vim.lsp.set_log_level 'warn'
+      vim.lsp.log.set_level('warn')
 
       -- Set up lspconfig.
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
