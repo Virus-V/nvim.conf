@@ -46,7 +46,7 @@ o.scroll = 5
 --o.nofsync = true
 --o.undofile = true
 --o.undodir = "~/.vim/undodir"
-o.syntax = "on"
+-- o.syntax = "on"
 o.encoding = "UTF-8"
 o.ruler = true
 o.title = true
@@ -156,6 +156,26 @@ plugins = {
     end
   },
 
+  -- treesitter
+  {
+    "nvim-treesitter/nvim-treesitter",
+    branch = "main",
+    lazy = false,
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter").setup {
+        install_dir = vim.fn.stdpath("data") .. "/site",
+      }
+      require("nvim-treesitter").install { "c", "cpp", "go", "python", "lua", "markdown", "vim", "vimdoc" }
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "c", "h", "cpp", "hpp", "go", "python", "lua", "markdown" },
+        callback = function()
+          pcall(vim.treesitter.start)
+        end,
+      })
+    end,
+  },
+
   -- Auto dark mode
   {
     "f-person/auto-dark-mode.nvim",
@@ -164,24 +184,6 @@ plugins = {
       -- or leave it empty to use the default settings
       -- refer to the configuration section below
     }
-  },
-
-  -- Treesitter
-  -- 语法高亮插件
-  {
-    "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    lazy = false,
-    config = function ()
-      local configs = require("nvim-treesitter")
-
-      configs.setup({
-          ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir", "heex", "javascript", "html", "markdown" },
-          sync_install = false,
-          highlight = { enable = true },
-          indent = { enable = true },
-        })
-    end
   },
 
   -- LSP(Language Server Protocol)
@@ -269,17 +271,15 @@ plugins = {
 
   -- golang, disable by default
   -- go语言开发环境
-  --[[
   {
     "ray-x/go.nvim",
     lazy = true,
     dependencies = {  -- optional packages
       "ray-x/guihua.lua",
       "neovim/nvim-lspconfig",
-      "nvim-treesitter/nvim-treesitter",
     },
     config = function()
-      require("go").setup()
+      require("go").setup(config)
       local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
       vim.api.nvim_create_autocmd("BufWritePre", {
         pattern = "*.go",
@@ -291,11 +291,8 @@ plugins = {
     end,
     --event = {"CmdlineEnter"},
     ft = {"go", 'gomod'},
-    build = function()
-      require("go.install").update_all_sync()
-    end,
+    build = ':lua require("go.install").update_all_sync()'
   },
-  ]]
 
   -- myword
   -- 单词高亮，可以对多个单词用不同颜色高亮
